@@ -1,0 +1,5 @@
+[run]
+source = django_reclass
+omit =
+    *migrations*
+    django_reclass/__init__.py
