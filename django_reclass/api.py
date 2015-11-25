@@ -2,6 +2,7 @@ import requests
 import yaml
 from django.conf import settings
 from horizon_contrib.api import Manager
+import json
 
 
 class MasterClient(Manager):
@@ -18,7 +19,7 @@ class MasterClient(Manager):
 
         response = requests.post(
             path,
-            data=params,
+            data=json.dumps(params) if 'master' in path else params,
             headers=headers)
 
         return response
@@ -34,3 +35,11 @@ class MasterClient(Manager):
             getattr(settings, "SALT_MASTER_PROTOCOL", "http"),
             getattr(settings, "SALT_MASTER_HOST", "185.22.98.86"),
             getattr(settings, "SALT_MASTER_PORT", 5000))
+
+    def update(self, clients=None, cmd='salt \"{clients}\" state.highstate'):
+        '''call salt {clients} state.highstate from salt master'''
+        return self.request(
+            'master/',
+            params={
+                'cmd': cmd.format(**{'clients': clients or '*'}),
+            }, method='POST')

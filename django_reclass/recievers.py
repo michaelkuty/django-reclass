@@ -7,5 +7,6 @@ def push_to_master(sender, template=None, **kwargs):
     """If Reclass Template sync = True push to master
     """
 
-    if template and template.sync is True:
-        template.push()
+    #if template and template.sync is True:
+    #    template.push()
+    pass

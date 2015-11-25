@@ -9,6 +9,8 @@ class Reclass(MasterClient):
 
     env = Environment()
 
+    name = 'salt-master'
+
     def pull(self, path):
         '''Get data from remote Salt Master'''
         return self.request(path, method='GET')
@@ -39,3 +41,13 @@ class Reclass(MasterClient):
             self.push(path=path, data=meta)
 
         return meta
+
+    @property
+    def salt_master(self):
+        '''Returns Salt Master Template'''
+        return self.get_node(label=self.name)
+
+    def get_node(self, name):
+        '''returns node from reclass/nodes/...'''
+        from django_reclass.models import ReclassTemplate
+        return ReclassTemplate.objects.get(label=name)
