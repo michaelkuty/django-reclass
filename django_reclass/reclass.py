@@ -9,6 +9,10 @@ class Reclass(MasterClient):
 
     env = Environment()
 
+    def pull(self, path):
+        '''Get data from remote Salt Master'''
+        return self.request(path, method='GET')
+
     def push(self, path, data):
         '''Send data to remote Salt Master'''
         return self.request(path, params=data, method='POST')

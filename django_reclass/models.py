@@ -8,10 +8,11 @@ from django.utils.translation import ugettext_lazy as _
 from django_reclass import reclass
 from yamlfield.fields import YAMLField
 from .signals import push_to_master
+from polymorphic import PolymorphicModel
 
 
 @python_2_unicode_compatible
-class ReclassTemplate(models.Model):
+class ReclassTemplate(PolymorphicModel):
 
     label = models.CharField(verbose_name=_(
         'Label'), max_length=250, null=True, blank=True)
