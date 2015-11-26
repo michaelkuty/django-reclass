@@ -1,9 +1,9 @@
 
-==========================
-Leonardo django-reclass
-==========================
+========================
+Django Service Templates
+========================
 
-Store and render and push your Reclass templates to Salt Master.
+Manage your service templates via Django Admin. Store, render and then transform or push to engine.
 
 .. contents::
     :local:
