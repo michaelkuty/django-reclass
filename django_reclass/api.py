@@ -7,6 +7,12 @@ import json
 
 class MasterClient(Manager):
 
+    def __init__(self, host=None, port=None, *args, **kwargs):
+        super(MasterClient, self).__init__(*args, **kwargs)
+
+        if host or port:
+            self.set_api(host, port)
+
     def do_request(self, path, method="GET", params={}, headers={}):
         '''make raw request'''
         headers["Content-Type"] = "application/json"
@@ -30,11 +36,11 @@ class MasterClient(Manager):
             settings, "SALT_MASTER_KEY", "assadssdASASDsadssd687465")
         return headers
 
-    def set_api(self):
+    def set_api(self, host=None, port=None):
         self.api = '%s://%s:%s/' % (
             getattr(settings, "SALT_MASTER_PROTOCOL", "http"),
-            getattr(settings, "SALT_MASTER_HOST", "185.22.98.86"),
-            getattr(settings, "SALT_MASTER_PORT", 5000))
+            host or getattr(settings, "SALT_MASTER_HOST", "185.22.98.86"),
+            port or getattr(settings, "SALT_MASTER_PORT", 5000))
 
     def update(self, clients=None, cmd='salt \"{clients}\" state.highstate'):
         '''call salt {clients} state.highstate from salt master'''
