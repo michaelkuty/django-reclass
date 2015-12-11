@@ -26,13 +26,14 @@ class ReclassTemplate(ServiceTemplate):
 
     def save(self, *args, **kwargs):
 
-        # render with fail silently
-        try:
-            self.rendered = self.render()
-            self.modified = datetime.now()
-        except Exception as e:
-            if settings.DEBUG:
-                raise e
+        if self.sync:
+            # render with fail silently
+            try:
+                self.rendered = self.render()
+                self.modified = datetime.now()
+            except Exception as e:
+                if settings.DEBUG:
+                    raise e
 
         super(ReclassTemplate, self).save(*args, **kwargs)
 
