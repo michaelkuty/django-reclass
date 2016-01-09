@@ -8,6 +8,8 @@ default_app_config = 'django_reclass.Config'
 
 LEONARDO_APPS = ['dbtemplates', 'django_reclass']
 
+LEONARDO_PUBLIC = True
+
 
 class Config(AppConfig):
     name = 'django_reclass'

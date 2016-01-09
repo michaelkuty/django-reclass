@@ -4,9 +4,12 @@ from datetime import datetime
 
 import yaml
 from django.conf import settings
+from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django_reclass import reclass
 from django_service_templates.models import ServiceTemplate
+from yamlfield.fields import YAMLField
 
 from .signals import push_to_master
 
@@ -33,16 +36,16 @@ class ReclassTemplate(ServiceTemplate):
                 self.modified = datetime.now()
             except Exception as e:
                 if settings.DEBUG:
-                    raise e
+                    raise Exception('Exception was raised {} during rendering {}'.format(e, self.label))
 
         super(ReclassTemplate, self).save(*args, **kwargs)
 
         if self.sync:
             push_to_master.send(sender=ReclassTemplate, template=self)
 
-    def get_reclass_path(self):
+    def get_reclass_path(self, root_path='srv/salt/reclass/classes'):
         '''return doted path for reclass classes.system.app'''
-        return self.get_path().replace('srv/salt/reclass/classes', '').replace('/', '.').replace('.yml', '')[1:]
+        return self.get_path().replace(root_path, '').replace('/', '.').replace('.yml', '')[1:]
 
     def add_class_to_node(self, name, push=False):
         '''add class to node template'''
@@ -90,3 +93,36 @@ class ReclassTemplate(ServiceTemplate):
     class Meta:
         verbose_name = _("Reclass Template")
         verbose_name_plural = _("Reclass Templates")
+
+
+@python_2_unicode_compatible
+class Reclass(models.Model):
+
+    verbose_name = models.CharField(
+        verbose_name=_('Verbose Name'), max_length=250)
+
+    name = models.SlugField(verbose_name=_('Name'), max_length=250)
+
+    nodes = models.ManyToManyField(
+        ReclassTemplate, related_name="reclass_nodes",
+        blank=True)
+    classes = models.ManyToManyField(
+        ReclassTemplate, related_name="reclass_classes",
+        blank=True)
+
+    context = YAMLField(blank=True, null=True)
+    extra = YAMLField(blank=True, null=True)
+
+    reclass = models.ManyToManyField(
+        'self', related_name="reclasses", blank=True,
+        help_text=_('Connect other reclass and all struff would be inherited from them.'))
+
+    modified = models.DateTimeField(
+        blank=True, null=True, auto_now=True)
+
+    def __str__(self):
+        return self.verbose_name
+
+    def export(self):
+        '''Export reclass as standard directory'''
+        raise NotImplementedError
