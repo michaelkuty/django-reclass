@@ -6,7 +6,10 @@ from .reclass import Reclass
 default_app_config = 'django_reclass.Config'
 
 
-LEONARDO_APPS = ['dbtemplates', 'django_reclass']
+LEONARDO_APPS = [
+    'dbtemplates', 'django_reclass',
+    'rest_framework', 'rest_framework.authtoken'
+]
 
 LEONARDO_PUBLIC = True
 
