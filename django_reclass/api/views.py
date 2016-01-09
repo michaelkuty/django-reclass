@@ -1,10 +1,10 @@
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import authentication, permissions
-from  django.db.models  import  Q
-
+from django.db.models import Q
 from django_reclass.models import Reclass, ReclassTemplate
+from rest_framework import authentication, permissions
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .serializers import ReclassSerializer, ReclassTemplateSerializer
 
 
@@ -35,7 +35,8 @@ class ReclassView(APIView):
         """
         if path and not slug:
             try:
-                template = ReclassTemplate.objects.get(Q(path=path) | Q(label=path))
+                template = ReclassTemplate.objects.get(
+                    Q(path=path) | Q(path=get_path(path)) | Q(label=path) | Q(label=path + '.init'))
             except Exception as e:
                 response = Response(
                     {'error': 'Path: {} not found.'.format(path)})
