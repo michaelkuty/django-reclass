@@ -8,7 +8,8 @@ default_app_config = 'django_reclass.Config'
 
 LEONARDO_APPS = [
     'dbtemplates', 'django_reclass',
-    'rest_framework', 'rest_framework.authtoken'
+    'rest_framework', 'rest_framework.authtoken',
+    'django_graphiql'
 ]
 
 LEONARDO_PUBLIC = True

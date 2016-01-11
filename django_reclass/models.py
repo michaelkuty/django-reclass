@@ -86,9 +86,20 @@ class ReclassTemplate(ServiceTemplate):
             self.rendered = yaml.safe_dump(data)
             self.save()
 
-    def paramaters(self, paramaters):
-        '''manipulate with reclass means add and push to master'''
-        raise NotImplementedError
+    @property
+    def parameters(self):
+        '''return parameters'''
+        return self.yaml_content.get('parameters', {})
+
+    @property
+    def classes(self):
+        '''return classes'''
+        return self.yaml_content.get('classes', {})
+
+    @property
+    def applications(self):
+        '''return applications'''
+        return self.yaml_content.get('applications', {})
 
     class Meta:
         verbose_name = _("Reclass Template")
